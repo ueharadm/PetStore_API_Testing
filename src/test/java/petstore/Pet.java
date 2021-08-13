@@ -46,7 +46,7 @@ public class Pet {
     @Test(priority = 2)
     public void consultarPet(){
 
-        String petId = "16051994";
+        String petId = "161744";
         String token=
         given() // Dado
                 .contentType("application/json") // Comum em API REST - antigas eram "text/xml"
@@ -63,6 +63,23 @@ public class Pet {
                 .path("category.name")
         ;
         System.out.println("O token é: " + token);
+    }
+
+    @Test(priority = 3) // Identifica o método ou função com oum teste par o TestNG
+    public void alterarPet() throws IOException {
+        String jsonBody = lerJson("db/pet2.json");
+
+        given() // Dado
+                .contentType("application/json") // Comum em API REST - antigas eram "text/xml"
+                .log().all()
+                .body(jsonBody)
+        .when() // Quando
+                .put(uri)
+        .then() // Então
+                .log().all()
+                .statusCode(200)
+                .body("status",is("sold"))
+        ;
     }
 
 
