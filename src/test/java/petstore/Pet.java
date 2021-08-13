@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
 
 public class Pet {
     String uri = "https://petstore.swagger.io/v2/pet"; //Endereço da entidade Pet
@@ -19,8 +20,8 @@ public class Pet {
     }
 
     // Incluir - Create - Post
-    @Test // Identifica o método ou função com oum teste par o TestNG
-    public void incluir() throws IOException {
+    @Test(priority = 1) // Identifica o método ou função com oum teste par o TestNG
+    public void incluirPet() throws IOException {
         String jsonBody = lerJson("db/pet1.json");
 
         // Sintaxe Gherkin
@@ -38,7 +39,31 @@ public class Pet {
                 .statusCode(200)
                 .body("name",is("Snoopy")) // Compara tags dentro do corpo do Json do Given e do Then
                 .body("status",is("available"))
+                .body("category.name",is("AX1515LOTR"))
         ;
     }
+
+    @Test(priority = 2)
+    public void consultarPet(){
+
+        String petId = "16051994";
+        String token=
+        given() // Dado
+                .contentType("application/json") // Comum em API REST - antigas eram "text/xml"
+                .log().all()
+                .when() // Quando
+                .get(uri+"/"+petId)
+                .then() // Então
+                .log().all()
+                .statusCode(200)
+                .body("name",is("Snoopy")) // Compara tags dentro do corpo do Json do Given e do Then
+                .body("status",is("available"))
+                .body("category.name",is("AX1515LOTR"))
+        .extract()
+                .path("category.name")
+        ;
+        System.out.println("O token é: " + token);
+    }
+
 
 }
