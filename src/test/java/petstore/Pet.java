@@ -78,7 +78,26 @@ public class Pet {
         .then() // Então
                 .log().all()
                 .statusCode(200)
+                .body("name",is("Snoopy"))
                 .body("status",is("sold"))
+        ;
+    }
+
+    @Test(priority = 4)
+    public void excluirPet(){
+        String petId = "161744";
+
+        given() // Dado
+                .contentType("application/json") // Comum em API REST - antigas eram "text/xml"
+                .log().all()
+                .when() // Quando
+                .delete(uri+"/"+petId)
+                .then() // Então
+                .log().all()
+                .statusCode(200)
+                .body("code", is(200))
+                .body("type",is("unknown"))
+                .body("message",is("161744"))
         ;
     }
 
